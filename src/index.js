@@ -1,19 +1,33 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'normalize.css/normalize.css';
+///////////////////////////////////////////////////////////////////////////////////MODULES
+const express = require('express');
+const morgan = require('morgan');
+const chalk = require('chalk');
+const path = require('path');
+////////////////////////////////////////////////////////////////////////////ROUTER MODULES
+const deviceRouter = require('./routers/device');
+const connectionRouter = require('./routers/connection');
+const notFound = require('./middleware/notFound');
+////////////////////////////////////////////////////////////////////////////////////////DB
+require('./db/mongoose');
+//////////////////////////////////////////////////////////////////////////////EXPRESS PORT
+const PORT = process.env.PORT || 5000;
+///////////////////////////////////////////////////////////////////////////////EXPRESS APP
+const app = express();
+///////////////////////////////////////////////////////////////////////////////MIDDLEWARES
+app.use(express.json());
+app.use(morgan('dev'));
+///////////////////////////////////////////////////////////////////////////////////ROUTERS
+app.use('/api', deviceRouter);
+app.use('/api', connectionRouter);
+///////////////////////////////////////////////////////////////SERVE STATIC ASSETS IN PROD
+// Set the static folder
+app.use(express.static(path.join(__dirname, '../client/build')));
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+app.get('*', (request, response) => {
+  response.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
+});
+////////////////////////////////////////////////////////////////////////////ERROR HANDLERS
+app.use(notFound);
+////////////////////////////////////////////////////////////////////////////////////LISTEN
+app.listen(PORT, () => console.log(`Listening on port ${chalk.yellow(PORT)}`));
+//////////////////////////////////////////////////////////////////////////////////////////
