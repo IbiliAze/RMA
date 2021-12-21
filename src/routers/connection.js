@@ -28,8 +28,9 @@ router.post('/connection', cors(corsOptions), async (request, response) => {
       password: request.body.sshPassword,
       command: request.body.command,
     });
-    return response.status(201).send({ message: 'Connection created successfully' });
+    return response.status(200).send({ message: 'Connection created successfully' });
   } catch (error) {
+    console.log(error);
     return response.status(500).send({ message: 'Connection creation failed', error: String(error) });
   }
 });

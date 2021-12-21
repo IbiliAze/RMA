@@ -17,9 +17,9 @@ function HomePage({ device, deleteDevice }) {
   // onClick functions
   const onDeleteClick = e => deleteDevice(device._id);
   const onTestClick = e => req('dir');
-  const onSleepClick = e => req('dir');
-  const onRestartClick = e => req('dir');
-  const onShutdownClick = e => req('dir');
+  const onSleepClick = e => req('shutdown /s');
+  const onRestartClick = e => req(device.os === 'Windows' ? 'shutdown -t 0 -r -f' : 'sudo reboot');
+  const onShutdownClick = e => req(device.os === 'Windows' ? 'shutdown /s /t 1' : 'sudo shutdown');
 
   // JSX
   return (
@@ -45,7 +45,7 @@ function HomePage({ device, deleteDevice }) {
           <Button onClick={onShutdownClick} outline color='primary' size='sm'>
             Shutdown
           </Button>
-        </ButtonGroup>{' '}
+        </ButtonGroup>
         <br />
         <hr />
         <Button onClick={onDeleteClick} color='danger' size='sm'>
