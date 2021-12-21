@@ -42,7 +42,9 @@ export const getDevices = endpoint => async dispatch => {
 
   try {
     const response = await axios.get(
-      endpoint === undefined ? 'http://192.168.0.15:5000/api/device' : `http://192.168.0.15:5000/api/device${endpoint}`
+      endpoint === undefined
+        ? `${process.env.REACT_APP_ORIGIN_URL}/api/device`
+        : `${process.env.REACT_APP_ORIGIN_URL}/api/device${endpoint}`
     );
 
     dispatch(returnMessages({ text: response.data.message, id: null }, response.status, GET_DEVICES_SUCCESS));
@@ -83,7 +85,7 @@ export const postDevice =
     const data = { host, description, sshUsername, sshPassword, sshPort, os };
 
     try {
-      const response = await axios.post('http://192.168.0.15:5000/api/device', data);
+      const response = await axios.post(`${process.env.REACT_APP_ORIGIN_URL}/api/device`, data);
 
       dispatch(returnMessages({ text: response.data.message, id: host }, response.status, POST_DEVICE_SUCCESS));
       dispatch(postDeviceSuccess(response.data.device));
@@ -121,7 +123,7 @@ export const putDevice =
     dispatch(returnMessages({ text: null, id: deviceId }, null, PUT_DEVICE_REQUEST));
 
     try {
-      const response = await axios.put(`http://192.168.0.15:5000/api/device/${deviceId}`, {
+      const response = await axios.put(`${process.env.REACT_APP_ORIGIN_URL}/api/device/${deviceId}`, {
         description,
         sshUsername,
         sshPassword,
@@ -163,7 +165,7 @@ export const deleteDevice = deviceId => async dispatch => {
   dispatch(returnMessages({ text: null, id: deviceId }, null, DELETE_DEVICE_REQUEST));
 
   try {
-    const response = await axios.delete(`http://192.168.0.15:5000/api/device/${deviceId}`);
+    const response = await axios.delete(`${process.env.REACT_APP_ORIGIN_URL}/api/device/${deviceId}`);
 
     dispatch(returnMessages({ text: response.data.message, id: deviceId }, response.status, DELETE_DEVICE_SUCCESS));
     dispatch(deleteDeviceSuccess(response.data.device));

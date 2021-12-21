@@ -6,7 +6,7 @@ function HomePage({ device, deleteDevice }) {
   const req = async command => {
     await axios({
       method: 'POST',
-      url: 'http://192.168.0.15:5000/api/connection',
+      url: `${process.env.REACT_APP_ORIGIN_URL}/api/connection`,
       data: {
         ...device,
         command,
@@ -32,23 +32,23 @@ function HomePage({ device, deleteDevice }) {
           <ListGroupItem>{device.description}</ListGroupItem>
         </ListGroup>
         <hr />
-        <Button onClick={onTestClick} color='success'>
+        <Button onClick={onTestClick} color='success' size='sm'>
           Test
         </Button>{' '}
         <ButtonGroup>
-          <Button onClick={onSleepClick} outline color='primary'>
+          <Button onClick={onSleepClick} outline color='primary' size='sm'>
             Sleep
           </Button>
-          <Button onClick={onRestartClick} outline color='primary'>
+          <Button onClick={onRestartClick} outline color='primary' size='sm'>
             Restart
           </Button>
-          <Button onClick={onShutdownClick} outline color='primary'>
+          <Button onClick={onShutdownClick} outline color='primary' size='sm'>
             Shutdown
           </Button>
         </ButtonGroup>{' '}
         <br />
         <hr />
-        <Button onClick={onDeleteClick} color='danger'>
+        <Button onClick={onDeleteClick} color='danger' size='sm'>
           Delete
         </Button>
       </AccordionBody>
