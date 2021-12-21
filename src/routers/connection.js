@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 //////////////////////////////////////////////////////////////////////////////////////CORS
 const corsOptions = require('../utils/corsOptions');
+///////////////////////////////////////////////////////////////////////////////////////SSH
+const ssh = require('../utils/ssh');
 ////////////////////////////////////////////////////////////////////////////////////ROUTER
 const router = new express.Router();
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +22,13 @@ router.options('/connection/:id', cors(corsOptions), async (request, response) =
 // POST /api/connection
 router.post('/connection', cors(corsOptions), async (request, response) => {
   try {
-    return response.status(201).send({ message: 'Connection saved successfully' });
+    ssh({
+      host: request.body.host,
+      username: request.body.sshUsername,
+      password: request.body.sshPassword,
+      command: request.body.command,
+    });
+    return response.status(201).send({ message: 'Connection created successfully' });
   } catch (error) {
     return response.status(500).send({ message: 'Connection creation failed', error: String(error) });
   }

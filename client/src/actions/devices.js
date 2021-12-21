@@ -42,7 +42,7 @@ export const getDevices = endpoint => async dispatch => {
 
   try {
     const response = await axios.get(
-      endpoint === undefined ? 'http://localhost:5000/api/device' : `http://localhost:5000/api/device${endpoint}`
+      endpoint === undefined ? 'http://192.168.0.15:5000/api/device' : `http://192.168.0.15:5000/api/device${endpoint}`
     );
 
     dispatch(returnMessages({ text: response.data.message, id: null }, response.status, GET_DEVICES_SUCCESS));
@@ -75,22 +75,22 @@ export const postDeviceFailure = errorMessage => ({
 });
 
 export const postDevice =
-  ({ deviceName, description, country, department, type, floor }) =>
+  ({ host, description, sshPassword, sshUsername, sshPort, os }) =>
   async dispatch => {
     dispatch(postDeviceRequest());
-    dispatch(returnMessages({ text: null, id: deviceName }, null, POST_DEVICE_REQUEST));
+    dispatch(returnMessages({ text: null, id: host }, null, POST_DEVICE_REQUEST));
 
-    const data = { deviceName, description, country, department, type, floor };
+    const data = { host, description, sshUsername, sshPassword, sshPort, os };
 
     try {
-      const response = await axios.post('http://localhost:5000/api/device', data);
+      const response = await axios.post('http://192.168.0.15:5000/api/device', data);
 
-      dispatch(returnMessages({ text: response.data.message, id: deviceName }, response.status, POST_DEVICE_SUCCESS));
+      dispatch(returnMessages({ text: response.data.message, id: host }, response.status, POST_DEVICE_SUCCESS));
       dispatch(postDeviceSuccess(response.data.device));
     } catch (error) {
       dispatch(
         returnMessages(
-          { text: errorParser(error), id: deviceName },
+          { text: errorParser(error), id: host },
           error.response ? error.response.status : 500,
           POST_DEVICE_FAILURE
         )
@@ -115,18 +115,18 @@ export const putDeviceFailure = errorMessage => ({
 });
 
 export const putDevice =
-  ({ deviceId, description, country, department, type, floor }) =>
+  ({ deviceId, description, sshPassword, sshUsername, sshPort, os }) =>
   async dispatch => {
     dispatch(putDeviceRequest());
     dispatch(returnMessages({ text: null, id: deviceId }, null, PUT_DEVICE_REQUEST));
 
     try {
-      const response = await axios.put(`http://localhost:5000/api/device/${deviceId}`, {
+      const response = await axios.put(`http://192.168.0.15:5000/api/device/${deviceId}`, {
         description,
-        country,
-        department,
-        type,
-        floor,
+        sshUsername,
+        sshPassword,
+        sshPort,
+        os,
       });
 
       dispatch(returnMessages({ text: response.data.message, id: deviceId }, response.status, PUT_DEVICE_SUCCESS));
@@ -163,7 +163,7 @@ export const deleteDevice = deviceId => async dispatch => {
   dispatch(returnMessages({ text: null, id: deviceId }, null, DELETE_DEVICE_REQUEST));
 
   try {
-    const response = await axios.delete(`http://localhost:5000/api/device/${deviceId}`);
+    const response = await axios.delete(`http://192.168.0.15:5000/api/device/${deviceId}`);
 
     dispatch(returnMessages({ text: response.data.message, id: deviceId }, response.status, DELETE_DEVICE_SUCCESS));
     dispatch(deleteDeviceSuccess(response.data.device));

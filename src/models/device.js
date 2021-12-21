@@ -10,6 +10,11 @@ const deviceSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
+    sshUsername: {
+      type: String,
+      trim: true,
+      required: true,
+    },
     sshPassword: {
       type: String,
       trim: true,
