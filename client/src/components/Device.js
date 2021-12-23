@@ -19,7 +19,10 @@ function HomePage({ device, deleteDevice }) {
   const onTestClick = e => req('dir');
   const onSleepClick = e => req('shutdown /h');
   const onRestartClick = e => req(device.os === 'Windows' ? 'shutdown -t 0 -r -f' : 'sudo reboot');
-  const onShutdownClick = e => req(device.os === 'Windows' ? 'shutdown /s /t 1' : 'sudo shutdown');
+  const onShutdownClick = e =>
+    req(
+      device.os === 'Windows' ? 'shutdown /s /t 1' : device.os === 'Linux' ? 'sudo shutdown' : 'sudo shutdown -h now'
+    );
 
   // JSX
   return (
